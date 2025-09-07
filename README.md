@@ -43,13 +43,6 @@ It supports multiple options for virtual environments (**Pipenv, pip+venv, Conda
 
 ---
 
-## 🛠️ Setting Up a Python Virtual Environment  
-
-### Using Pipenv
-1. **Install Pipenv (if not already installed):**
-   ```bash
-   pip install pipenv
-
 ### **Phase 1 – AI Agent**
 1. Setup API Keys for Groq, Tavily, OpenAI  
 2. Configure LLMs & Tools  
