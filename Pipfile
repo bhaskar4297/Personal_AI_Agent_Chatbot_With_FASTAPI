@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+uvicorn = "*"
+pydantic = "*"
+langchain = "*"
+langchain-openai = "*"
+langchain-groq = "*"
+langgraph = "*"
+langchain-community = "*"
+tavily-python = "*"
+python-dotenv = "*"
+langchain-tavily = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
