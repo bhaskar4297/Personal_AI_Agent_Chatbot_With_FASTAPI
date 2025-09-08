@@ -1,45 +1,64 @@
-# if you dont use pipenv uncomment the following:
+# ai_agent.py (Groq + minimal tools)
+
+import os
+import requests
 from dotenv import load_dotenv
+
 load_dotenv()
 
-#Step1: Setup API Keys for Groq, OpenAI and Tavily
-import os
-
-GROQ_API_KEY=os.environ.get("GROQ_API_KEY")
-TAVILY_API_KEY=os.environ.get("TAVILY_API_KEY")
-OPENAI_API_KEY=os.environ.get("OPENAI_API_KEY")
-
-#Step2: Setup LLM & Tools
+# API Keys
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY")
+DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY")
+# LLM
 from langchain_groq import ChatGroq
-from langchain_openai import ChatOpenAI
-from langchain_community.tools.tavily_search import TavilySearchResults
+from langchain_experimental.tools import PythonREPLTool
 
-openai_llm=ChatOpenAI(model="gpt-4o-mini")
-groq_llm=ChatGroq(model="llama-3.3-70b-versatile")
+# Tavily Search
+try:
+    from langchain_tavily import TavilySearchResults
+except ImportError:
+    from langchain_community.tools.tavily_search import TavilySearchResults
 
-search_tool=TavilySearchResults(max_results=2)
+# Wikipedia
+from langchain_community.tools import WikipediaQueryRun
+from langchain_community.utilities import WikipediaAPIWrapper
 
-#Step3: Setup AI Agent with Search tool functionality
+# Weather (custom tool)
+from langchain_core.tools import Tool
+def weather_lookup(city="London"):
+    url = f"https://wttr.in/{city}?format=3"
+    try:
+        return requests.get(url, timeout=10).text
+    except Exception as e:
+        return f"Weather error: {e}"
+
+# Agent framework
 from langgraph.prebuilt import create_react_agent
-from langchain_core.messages.ai import AIMessage
+from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
-system_prompt="Act as an AI chatbot who is smart and friendly"
 
 def get_response_from_ai_agent(llm_id, query, allow_search, system_prompt, provider):
-    if provider=="Groq":
-        llm=ChatGroq(model=llm_id)
-    elif provider=="OpenAI":
-        llm=ChatOpenAI(model=llm_id)
+    if provider != "Groq":
+        return {"error": "Currently only Groq provider is supported."}
 
-    tools=[TavilySearchResults(max_results=2)] if allow_search else []
-    agent=create_react_agent(
-        model=llm,
-        tools=tools,
-        state_modifier=system_prompt
-    )
-    state={"messages": query}
-    response=agent.invoke(state)
-    messages=response.get("messages")
-    ai_messages=[message.content for message in messages if isinstance(message, AIMessage)]
-    return ai_messages[-1]
+    llm = ChatGroq(model=llm_id, api_key=GROQ_API_KEY)
 
+    # Tools
+    tools = [PythonREPLTool(), WikipediaQueryRun(api_wrapper=WikipediaAPIWrapper())]
+    if allow_search and TAVILY_API_KEY:
+        tools.append(TavilySearchResults(max_results=2, api_key=TAVILY_API_KEY))
+    tools.append(Tool.from_function(weather_lookup, name="weather_lookup", description="Get weather for a city"))
+
+    agent = create_react_agent(model=llm, tools=tools)
+
+    # Build messages
+    state = {"messages": [SystemMessage(content=system_prompt)]}
+    for msg in query:
+        state["messages"].append(HumanMessage(content=msg))
+
+    # Run
+    response = agent.invoke(state)
+    messages = response.get("messages", [])
+    ai_messages = [m.content for m in messages if isinstance(m, AIMessage)]
+    return ai_messages[-1] if ai_messages else "No response from agent."
