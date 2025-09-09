@@ -1,0 +1,48 @@
+# -----------------------------
+# Python / Virtualenv
+# -----------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.egg-info/
+.eggs/
+.venv/
+venv/
+ENV/
+env/
+
+# -----------------------------
+# OS files
+# -----------------------------
+.DS_Store
+Thumbs.db
+
+# -----------------------------
+# IDE/editor settings
+# -----------------------------
+.vscode/
+.idea/
+*.swp
+
+# -----------------------------
+# Environment variables
+# -----------------------------
+.env
+*.env
+**/.env
+Deploy_with_docker/.env
+
+# -----------------------------
+# Docker files (ignore cache/data, not configs)
+# -----------------------------
+*.pid
+*.log
+*.bak
+
+# -----------------------------
+# Streamlit cache
+# -----------------------------
+.streamlit/
