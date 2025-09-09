@@ -86,3 +86,43 @@ It supports multiple options for virtual environments (**Pipenv, pip+venv, Conda
 - **Python** → Core programming language  
 
 ---
+
+## 🐳 Deployment with Docker
+
+To make this chatbot easy to run anywhere, I containerized both the **backend (FastAPI)** and **frontend (Streamlit)** into Docker images.  
+This means anyone can launch the app with a few commands—no need to install Python or dependencies manually.  
+
+## ⚙️ CI/CD with GitHub Actions
+
+This repo is integrated with GitHub Actions for continuous integration & deployment.
+
+On every push to main, GitHub automatically:
+
+Builds fresh Docker images for backend & frontend.
+
+Tags them as latest and with the short commit SHA.
+
+Pushes them to Docker Hub → dockerhub.com/u/bhaskar4297
+.
+---
+
+### 🚀 Run with Docker Compose (recommended)
+
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/bhaskar4297/Personal_AI_Agent_Chatbot_With_FASTAPI.git
+   cd C:\Users\sinha\OneDrive\Documents\Agentic AI fast API\Deploy_with_docker
+
+   **Create .env file (do NOT commit .env)**
+   ```bash
+   cp .env.example .env
+
+   **Open .env and paste your keys:**
+   **Start both backend + frontend**
+   docker compose up -d
+
+   **Access in browser**
+
+   Backend API → http://localhost:9999/docs
+
+   Frontend UI → http://localhost:8501
