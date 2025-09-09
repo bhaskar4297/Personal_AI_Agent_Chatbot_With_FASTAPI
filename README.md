@@ -7,9 +7,18 @@ LangGraph | FastAPI | Streamlit | Groq | DeepSeek |LangChain
 
 ## 📌 Project Overview  
 
+## 📌 Project Overview  
+
 This project is a **Personal Agentic AI Chatbot** that enables users to interact with different **LLM providers** (DeepSeek, Groq models with extendable support for Llama/Mistral) through a unified interface.  
 
-Unlike ChatGPT, which is tied to a single provider, this chatbot is **provider-agnostic, customizable, and tool-augmented**, making it ideal for **AI experimentation, prototyping and practical AI applications**.  
+Unlike ChatGPT, which is tied to a single provider, this chatbot is **provider-agnostic, customizable and tool-augmented**, making it ideal for **AI experimentation, prototyping, and practical AI applications**.  
+
+### 🔑 Key Highlights
+- 🧠 **Multi-LLM Support** → Integrates DeepSeek, Groq and easily extendable to Llama/Mistral.  
+- 🛠 **Customizable & Tool-Augmented** → Add your own tools, APIs and workflows.  
+- 🐳 **Dockerized Deployment** → Simple `docker compose up -d` spins up backend + frontend instantly.  
+- 🔄 **CI/CD Integration** → Automated builds & deployments via GitHub Actions for reliable updates.  
+
 
 ---
 
@@ -102,6 +111,8 @@ Builds fresh Docker images for backend & frontend.
 
 Tags them as latest and with the short commit SHA.
 
+---
+
 Pushes them to Docker Hub → dockerhub.com/u/bhaskar4297
 .
 ---
@@ -109,20 +120,20 @@ Pushes them to Docker Hub → dockerhub.com/u/bhaskar4297
 ### 🚀 Run with Docker Compose (recommended)
 
 1. **Clone the repo**
-   ```bash
    git clone https://github.com/bhaskar4297/Personal_AI_Agent_Chatbot_With_FASTAPI.git
    cd C:\Users\sinha\OneDrive\Documents\Agentic AI fast API\Deploy_with_docker
 
    **Create .env file (do NOT commit .env)**
-   ```bash
    cp .env.example .env
 
    **Open .env and paste your keys:**
+   GROQ_API_KEY=your_groq_api_key_here
+   TAVILY_API_KEY=your_tavily_api_key_here
+   
    **Start both backend + frontend**
    docker compose up -d
 
    **Access in browser**
 
    Backend API → http://localhost:9999/docs
-
    Frontend UI → http://localhost:8501
